@@ -1,0 +1,34 @@
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>R-TNT</title>
+<meta name="description" content="CS313 Project 2: Real-Time News Tracker">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<script type="text/javascript" src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+<!-- PLOT.LY graphing library -->
+<script src="/js/main.js"></script>
+<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+<link rel="stylesheet" type="text/css" href="/stylesheets/wcd.css" />
+<!-- <link rel="stylesheet" type="text/css" href="/stylesheets/main.css" /> -->
+<link href="https://fonts.googleapis.com/css?family=Neuton:800|Encode+Sans+Condensed:900|Crimson+Pro:300,400|Montserrat:500&display=swap" rel="stylesheet">
+
+
+<h1>public index.html</h1>
+
+<body>
+   <div class="wrapper">
+      <div id='user' onclick="ajaxRequest('/api/v1/user/1', 'user')">user</div>
+      
+      <div id='flume' onclick="ajaxRequest('/api/v1/flume', 'flume')">flume</div>
+      
+      <div id='rachio' onclick="ajaxRequest('/api/v1/rachio', 'rachio')">rachio</div>
+      
+      <div id='usage' onclick="ajaxRequest('/api/v1/usage/all', 'usage')">usage</div>
+      
+      <div id='zone2' onclick="ajaxRequest('/api/v1/zone/2', 'zone2')">zone 2</div>
+      
+      <div id='zone3' onclick="ajaxRequest('/api/v1/zone/3', 'zone3')">zone 3</div>
+      
+      <div id='zone4' onclick="ajaxRequest('/api/v1/zone/4', 'zone4' )">zone 4</div>
+   </div>
+</body>

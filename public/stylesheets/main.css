@@ -1,0 +1,434 @@
+.fonts {
+   font-family: 'Crimson Pro', serif;
+   /* headlines*/
+   font-family: 'Montserrat', sans-serif;
+   /*Google?*/
+   font-family: 'Neuton', serif;
+   /*NYT*/
+   font-family: 'Encode Sans Condensed', sans-serif;
+   /*fox*/
+ }
+ 
+ .jumbotron {
+   background: #532F8C;
+   color: white;
+   padding-bottom: 80px;
+ }
+ 
+ .jumbotron .btn-primary {
+   background: #845ac7;
+   border-color: #845ac7;
+ }
+ 
+ .jumbotron .btn-primary:hover {
+   background: #7646c1;
+ }
+ 
+ .jumbotron p {
+   color: #d9ccee;
+   max-width: 75%;
+   margin: 1em auto 2em;
+ }
+ 
+ .navbar+.jumbotron {
+   margin-top: -20px;
+ }
+ 
+ .jumbotron .lang-logo {
+   display: block;
+   background: #B01302;
+   border-radius: 50%;
+   overflow: hidden;
+   width: 100px;
+   height: 100px;
+   margin: auto;
+   border: 2px solid white;
+ }
+ 
+ .jumbotron .lang-logo img {
+   max-width: 100%;
+ }
+ 
+ body {
+   background-color: #e6e6e6;;
+ }
+ .wrapper {
+   /* setup the grid */
+   display: grid;
+   /* creates the whitish border between sections */
+   grid-gap: 3px;
+   /* fr means fraction and however many there are, that's the total
+      so below (currently) there is a total of 4.25 space, and each has it's own 
+      column fraction of that width. 1fr is then 1/4.25 = 23.5%  */
+   grid-template-columns: 1fr 1fr 1fr 1.25fr;
+   /* grid-template-rows: 30rem 15rem 15rem; */  
+   grid-template-rows: 30rem 20rem 15rem;
+   background-color: #ededed;
+   color: #444;
+   margin: .25rem;
+ }
+ @media (max-width: 767px) {
+   /* mobile wrapper - we want to keep two columns, one larger for article and 
+      sources stacked on top of each other, the second column for analysis.*/
+      .wrapper {
+       grid-template-rows: repeat(auto-fit, 30rem);
+     }  
+ }
+ 
+ @media (max-width: 885px) {
+   /*  nav needs to collapse a bit here. */
+   #rtntListedLogo {
+     display: none;
+   }
+ 
+ }
+ @media (min-width: 768px) {
+   .navbar {
+     max-height: 5.6rem;
+     display: flex;
+     align-items: center;
+     /* grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); */
+   }
+ }
+ 
+ .navbar {
+   margin-bottom: 3px;
+ }
+ 
+ .navbar-right {
+   margin-right: 1rem;
+   margin-top: 0.5rem;
+ }
+ 
+ .box {
+   background-color: #262626;
+   font-family: 'Crimson Pro', serif;
+   color: #e6e6e6;
+   border-radius: 5px;
+   padding: 16px;
+   font-size: 1.2rem;
+   line-height: 1.3;
+   transition: background-color .5s;
+ }
+ 
+ .box:hover {
+   background-color: #1c1c1c;
+ }
+ 
+ /* .b:hover {
+   background-color: #262626;
+ } */
+ 
+ .box a {
+   color: rgba(255, 255, 255, 0.9);
+   text-decoration: none;
+ }
+ 
+ .box a:hover {
+   color: #fff;
+   text-decoration: none;
+   /* transition: ease color .25s; */
+ }
+ 
+ .box li::first-letter {
+   font-size: 1.25rem;
+   /* color:#A0D4D8; */
+   color: #82B1D8;
+ }
+ 
+ .box li:hover:first-letter {
+   /* color: #d88c82;  */
+   color: #ced882;
+   transition: ease color .25s;
+ }
+ 
+ ul {
+   padding: 2px;
+   padding-left: 1.6rem;
+   list-style-type: none;
+   /* list-style-position: inside; */
+   text-indent: -0.8rem;
+ }
+ 
+ li>a>img {
+   max-width: 80px !important;
+   filter: invert(100%);
+ }
+ 
+ .a {
+   grid-column: 1 / span 3;
+   overflow-y: scroll;
+ }
+ 
+ .b {
+   grid-column: 4;
+   grid-row: 1 / span 3;
+   overflow-y: scroll;
+   overflow-x: scroll;
+   /*hate to do this but....*/
+   /* max-width: 38rem; */
+ }
+ 
+ .c {
+   grid-column: 1;
+   grid-row: 2 /span 2;
+   overflow-y: scroll;
+ }
+ 
+ .d {
+   grid-column: 2;
+   grid-row: 2 /span 2;
+   overflow-y: scroll;
+ }
+ 
+ .e {
+   grid-column: 3;
+   grid-row: 2 /span 2;
+   overflow-y: scroll;
+ }
+ @media (max-width: 768px) {
+   /* mobile source boxes: there's just rows of 30px each now. b, c, d, e will be affected*/
+   .b {
+     grid-row: 1 / span 4;
+   }
+   .c {
+     grid-column: 1 / span 3;
+     grid-row: 2 /span 1;
+   }
+   .d {
+     grid-column: 1 / span 3;
+     grid-row: 3 /span 1;
+   }
+   .e {
+     grid-column: 1 / span 3;  
+     grid-row: 4 /span 1;
+   }
+ }
+ 
+ .trending {
+  border-bottom: ivory 1px;
+ }
+ 
+ .flexible {
+ display:flex;
+ flex-direction: column;
+ flex-wrap: nowrap;
+ min-height: 54rem;
+ }
+ #aylienAnal {
+   min-height:2rem;
+ }
+ #analysis {
+   min-height:2rem;
+ }
+ #related {
+   min-height:14rem;
+ 
+ }
+ #related ul {
+   font-size: 1rem;
+ }
+ #credits{
+   display:none;
+ }
+ #graph {
+   /* position: fixed; */
+   min-height: 34rem;
+   vertical-align: bottom;
+   bottom: 8px;
+   overflow-x: scroll;
+   min-width: 28rem;
+ }
+ 
+ @media all and (min-width:600) {
+   #graph {
+     max-width: 20rem;
+   }
+ }
+ @media all and (min-width:800) {
+   #graph {
+     max-width: 26rem;
+   }
+ }
+ @media all and (min-width:1000) {
+   #graph {
+     max-width: 28rem;
+   }
+ }
+ @media all and (min-width:1200) {
+   #graph {
+     max-width: 30rem;
+   }
+ }
+ 
+ h4 {
+   font-size: 1.5rem;
+ }
+ 
+ h5 {
+   font-size: 1.3rem;
+ }
+ 
+ *::-webkit-scrollbar {
+   display: none;
+ }
+ 
+ 
+ .a h4, .b h4 {
+   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+ }
+ 
+ .c h4 {
+   font-family: 'Encode Sans Condensed', sans-serif;
+   /*fox news*/
+   font-variant-caps: small-caps;
+ }
+ 
+ .d h4 {
+   font-family: 'Neuton', serif;
+   /*NYTimes*/
+ }
+ 
+ .e h4 {
+   font-family: 'Montserrat', sans-serif;
+   /*Google News*/
+ }
+ 
+ .b h5, .boxHeader {
+   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+ }
+ .trendingHeader {
+   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+ 
+ }
+ 
+ #detail {
+   font-size: 1.4rem;
+ }
+ 
+ .right {
+   color: #82B1D8;
+   float: right;
+ }
+ 
+ .right:hover {
+   /* color:#c0d8eb; */
+   color: #ced882
+ }
+ 
+ .small {
+   max-width: 88%;
+ }
+ 
+ .smaller-text {
+   font-size: smaller;
+ }
+ 
+ .padLeft {
+   padding-left: 1rem;
+   ;
+ }
+ 
+ .padRight {
+   padding-right: 1rem;
+   ;
+ }
+ 
+ .center {
+   text-align: center;
+ }
+ 
+ .noContent {
+   font-size: 1.5rem;
+   padding: 22%;
+   color: #a5a5a5;
+ }
+ 
+ .active>a {
+   font-variant-caps: small-caps;
+ }
+ 
+ .container {
+   display: grid;
+   width:100%;
+ }
+ 
+ #credits {
+   font-size: .9rem;
+   padding: 1rem .5rem;
+ }
+ 
+ #credits a {
+   color: #ced882;
+ }
+ 
+ #credits a:hover {
+   color: #82B1D8;
+   transition: ease color .5s;
+ }
+ 
+ .menu-font {
+   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+ }
+ 
+ .standout {
+   color: #ced882;
+ }
+ 
+ .OEMArticle {
+   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+   font-style: italic;
+   font-size: 1rem;
+ }
+ 
+ .display-content {
+   display: initial;
+ }
+ /*News Ticker*/
+ @keyframes ticker {
+   0% { transform: translate3d(0, 0, 0); }
+   100% { transform: translate3d(-100%, 0, 0); }
+ }
+ .tcontainer{
+   width: 100%;
+   overflow: hidden;
+   border-bottom: 1px solid #e6e6e6;
+ }
+ .ticker-wrap {
+   width: 100%;
+   padding-left: 100%;
+   background-color: #262626;
+ }
+ .ticker-wrap:hover{
+   background-color: #1c1c1c;
+ }
+ .ticker-move {
+   display: inline-block;
+   white-space: nowrap;
+   padding-right: 100%;
+   animation-iteration-count: infinite;
+   animation-timing-function: linear;
+   animation-name: ticker;
+   /* animation-duration: 45s; */
+   animation-duration: 20s;
+ }
+ .ticker-move:hover{
+   /* animation-play-state: paused; */
+   animation-play-state: active;
+ }
+ .ticker-item{
+   display: inline-block;
+   padding: 0 2rem;
+ }
+ .ticker-item a {
+   color: inherit;
+ }
+ .ticker-item::first-letter {
+   font-size: 1.25rem;
+   color: #82B1D8;
+ }
+ .lydia_catherine_tobler_color {
+   color: rgb(0, 238, 255);
+ }
+ 
+ 

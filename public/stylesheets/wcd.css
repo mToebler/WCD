@@ -1,0 +1,16 @@
+.wrapper {
+   /* setup the grid */
+   display: grid;
+   /* creates the whitish border between sections */
+   grid-gap: 3px;
+   /* fr means fraction and however many there are, that's the total
+      so below (currently) there is a total of 4.25 space, and each has it's own 
+      column fraction of that width. 1fr is then 1/4.25 = 23.5%  */
+   grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+   /* grid-template-rows: 30rem 15rem 15rem; */  
+   /* grid-template-rows: 30rem 15rem 15rem; */  
+   grid-template-rows: 30rem;
+   background-color: #ededed;
+   color: #444;
+   margin: .25rem;
+ }
