@@ -15,6 +15,12 @@ const queryRachio = async (req, res) => {
    res.send(data);
 };
 
+const queryDevice = async (req, res) => {
+   let data = await getRachioDevice();
+   res.send(data);
+}
+
 router.route('/rachio').get(queryRachio);
+router.route('/rachio/device').get(queryDevice);
 
 module.exports = router;
