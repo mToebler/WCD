@@ -3,7 +3,7 @@ const express = require('express')
 const Router = require('express-promise-router')
 const db = require('../db')
 const router = Router()
-const {getUsageAll} = require('../controllers/controller')
+const {getUsageAll, getAverageUsageForZone, getAverageUsageByZone} = require('../controllers/controller')
 // const router = express.Router()
 
 const getFlume = (req, res) => {
@@ -57,8 +57,19 @@ const getUser = async (req, res) => {
 
 
 const getUsage = async (req, res) => {
-   let data = await getUsageAll()
+   let data = await getUsageAll();
    console.log(data);
+   res.send(data);
+}
+
+const getGpmByZone = async (req, res) => {
+   let data = await getAverageUsageByZone();
+   res.send(data);
+}
+
+const getGpmForZone = async (req, res) => {
+   const { id: zoneId } = req.params;
+   let data = await getAverageUsageForZone(zoneId);
    res.send(data);
 }
 
@@ -68,4 +79,6 @@ const getUsage = async (req, res) => {
 router.route('/zone/:id').get(getZone)
 router.route('/user/:id').get(getUser)
 router.route('/usage/all').get(getUsage)
+router.route('/usage/gpm/:id').get(getGpmForZone)
+router.route('/usage/gpm').get(getGpmByZone)
 module.exports = router;

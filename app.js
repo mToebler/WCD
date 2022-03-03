@@ -1,5 +1,6 @@
 const express = require('express');
 const morgan = require('morgan');
+var cors = require('cors');
 const db = require('./db');
 const app = express();
 const routes = require('./routes/routes');
@@ -22,6 +23,7 @@ require('dotenv').config();
 
 // middleware
 app.use(morgan("dev"))
+app.use(cors());
 app.use(express.static('./public'));
 // gives access to the req.body as a standard JS obj.
 app.use(express.json());

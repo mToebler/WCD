@@ -34,6 +34,29 @@ const getRachioDevice = async (id) => {
    }
 }
 
+const getRachioZones = async () => {
+   try {
+      const device = await getRachioDevice();
+      return device.zones;
+   } catch(err) {
+      console.error('getRachioZone ERROR: ', err);
+   }
+}
+
+// must first get unique zoneId from device
+const getRachioZone = async (id) => {
+   try {
+      const zones = await getRachioZones();      
+      const zone = zones.filter((e) => (e.zoneNumber == id))
+      console.log('getRachioZone', zone[0]);
+      // const zone = await rachioClient.getZone(id);
+      // console.log("getRachioZone:", zone);
+      return zone[0];      
+   } catch(err) {
+      console.error('getRachioZone: ERROR', err);
+   }
+}
+
 // only 28 days of retrieval is allowed!!!
 // NOTE: Rachio reports time in GMT in eventDate. Flume reports time for PDT. 
 // This means Flume needs 7 hours removed from MS time to sync up with rachio.
@@ -127,7 +150,9 @@ const persistRachioData = async () => {
 
 module.exports = {
    getRachioEvents,
-   getRachioDevice
+   getRachioDevice,
+   getRachioZone,
+   getRachioZones
 }
 // export class RachioService {
 

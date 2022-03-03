@@ -6,9 +6,22 @@ const getUsageAll = async () => {
    return JSON.stringify(rows);
 }
 
+const getAverageUsageByZone = async () => {
+   const { rows } = await db.query('SELECT usage/(EXTRACT(EPOCH FROM duration)/60) AS gpm, zone_id FROM (SELECT SUM(duration) AS duration, SUM(usage) AS usage, zone_id FROM zone_usage GROUP BY zone_id) AS dual');
+   console.log('getAverageUsageByZone', rows)
+   return JSON.stringify(rows);
+}
+
+const getAverageUsageForZone = async (zoneId) => {   
+   const { rows } = await db.query(`SELECT usage/(EXTRACT(EPOCH FROM duration)/60) AS gpm, zone_id FROM (SELECT SUM(duration) AS duration, SUM(usage) AS usage, zone_id FROM zone_usage WHERE zone_id = ${zoneId} GROUP BY zone_id) AS dual`);
+   console.log('getAverageUsageForZone', rows)
+   return JSON.stringify(rows);
+}
 
 module.exports = {  
-   getUsageAll
+   getUsageAll,
+   getAverageUsageByZone,
+   getAverageUsageForZone
 }
 
 // query for usage and duration from rachio

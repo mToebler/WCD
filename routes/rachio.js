@@ -6,7 +6,9 @@ const router = Router()
 
 const {
    getRachioEvents,
-   getRachioDevice
+   getRachioDevice,
+   getRachioZone,
+   getRachioZones
 } = require('../controllers/rachio');
 
 const queryRachio = async (req, res) => {
@@ -20,7 +22,21 @@ const queryDevice = async (req, res) => {
    res.send(data);
 }
 
+const queryZone = async (req, res) => {
+   const { id: zoneId } = req.params;
+   let data = await getRachioZone(zoneId);
+   res.send(data);
+}
+
+const queryZones = async (req, res) => {
+   let data = await getRachioZones();
+   res.json(data);
+   // res.send(data);
+}
+
 router.route('/rachio').get(queryRachio);
+router.route('/rachio/zone').get(queryZones);
+router.route('/rachio/zone/:id').get(queryZone);
 router.route('/rachio/device').get(queryDevice);
 
 module.exports = router;
