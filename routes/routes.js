@@ -3,7 +3,8 @@ const express = require('express')
 const Router = require('express-promise-router')
 const db = require('../db')
 const router = Router()
-const { getUsageAll, getAverageUsageForZone, getAverageUsageByZone, getCurrentAverageUsageForZone } = require('../controllers/controller')
+const { getUsageAll, getAverageUsageForZone, getAverageUsageByZone, getCurrentAverageUsageForZone, getMonthlyUsageForZone, getMonthlyUsage } = require('../controllers/controller')
+const res = require('express/lib/response')
 // const router = express.Router()
 
 const getFlume = (req, res) => {
@@ -79,6 +80,16 @@ const getCurrentGpmForZone = async (req, res) => {
    res.send(data);
 }
 
+const getMonthlyForZone = async (req, res) => {
+   const { id: zoneId } = req.params;
+   let data = await getMonthlyUsageForZone(zoneId)
+   res.send(data);
+}
+
+const getMonthlyForAll = async (req, res) => {   
+   let data = await getMonthlyUsage();
+   res.send(data);
+}
 
 // router.route('/flume').get(getFlume)
 // router.route('/rachio').get(getRachio)
@@ -88,4 +99,7 @@ router.route('/usage/all').get(getUsage)
 router.route('/usage/gpm/:id').get(getGpmForZone)
 router.route('/usage/gpm').get(getGpmByZone)
 router.route('/usage/gpm/:id/current').get(getCurrentGpmForZone)
+router.route('/usage/monthly/:id').get(getMonthlyForZone)
+router.route('/usage/monthly').get(getMonthlyForAll)
+
 module.exports = router;

@@ -26,11 +26,27 @@ const getCurrentAverageUsageForZone = async (zoneId) => {
    return JSON.stringify(rows);
 }
 
+const getMonthlyUsageForZone = async (zoneId) => {
+   const { rows } = await db.query(`SELECT TO_CHAR(date_trunc('month', start_time), 'Mon') as name, DATE_TRUNC('month', start_time) AS monthly, ROUND(SUM(usage)) as usage, zone_id FROM zone_usage WHERE start_time BETWEEN (NOW() - INTERVAL '1 year') AND NOW() AND zone_id = ${zoneId} GROUP BY name, monthly, zone_id ORDER BY monthly ASC`)
+   console.log('getMonthUsageForZone:', rows)
+   
+   return JSON.stringify(rows);
+}
+
+const getMonthlyUsage = async () => {
+   const { rows } = await db.query(`SELECT TO_CHAR(date_trunc('month', start_time), 'Mon') as name, DATE_TRUNC('month', start_time) AS monthly, ROUND(SUM(usage)) as usage FROM zone_usage WHERE start_time BETWEEN (NOW() - INTERVAL '1 year') AND NOW() GROUP BY name, monthly ORDER BY monthly ASC`)
+   console.log('getMonthUsage:', rows)
+   
+   return JSON.stringify(rows);
+}
+
 module.exports = {  
    getUsageAll,
    getAverageUsageByZone,
    getAverageUsageForZone,
-   getCurrentAverageUsageForZone
+   getCurrentAverageUsageForZone,
+   getMonthlyUsageForZone,
+   getMonthlyUsage
 }
 
 // query for usage and duration from rachio

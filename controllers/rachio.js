@@ -37,7 +37,10 @@ const getRachioDevice = async (id) => {
 const getRachioZones = async () => {
    try {
       const device = await getRachioDevice();
-      return device.zones;
+      const zones = device.zones;
+      const sortedZones = zones.sort((a, b) => a.zoneNumber - b.zoneNumber);
+      console.log('getRachioZones DEBUG: sortedZones:', sortedZones)
+      return sortedZones;
    } catch(err) {
       console.error('getRachioZone ERROR: ', err);
    }
