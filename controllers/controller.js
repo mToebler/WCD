@@ -18,10 +18,19 @@ const getAverageUsageForZone = async (zoneId) => {
    return JSON.stringify(rows);
 }
 
+const getCurrentAverageUsageForZone = async (zoneId) => {
+   const { rows } = await db.query(`select start_time, zone_id,  usage, duration, usage/(extract(epoch from duration)/60) as gpm from zone_usage where zone_id = ${zoneId} and start_time in (select max(start_time) from zone_usage where zone_id = ${zoneId})`);
+   
+   console.log('getCurrentAverageUsageForZone', rows)
+
+   return JSON.stringify(rows);
+}
+
 module.exports = {  
    getUsageAll,
    getAverageUsageByZone,
-   getAverageUsageForZone
+   getAverageUsageForZone,
+   getCurrentAverageUsageForZone
 }
 
 // query for usage and duration from rachio
