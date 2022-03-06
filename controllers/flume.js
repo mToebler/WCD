@@ -234,6 +234,32 @@ const getUsage = async (deviceId, fromWhen) => {
 };
 
 
+const getYearUsage = async () => {   
+   const {rows} = await db.query(`SELECT TO_CHAR(date_trunc('month', time_id), 'Mon') AS name, DATE_TRUNC('month', time_id) AS monthly, ROUND(SUM(usage)) AS usage FROM flume WHERE time_id BETWEEN (NOW() - INTERVAL '1 year') AND NOW() GROUP BY name, monthly ORDER BY monthly ASC`
+   )
+   console.log('getYearUsage', rows)
+   
+   return rows;
+}
+
+const getTotalWeekUsageForWeek = async (weekNum) => {
+   let weekNumber = weekNum ? weekNum : 1
+   
+   const { rows } = await db.query(`SELECT ROUND(SUM(usage)) as usage FROM flume WHERE time_id BETWEEN (NOW() - INTERVAL '${weekNumber} week') AND (NOW() - INTERVAL '${weekNumber - 1} week')`)
+   console.log('getTotalWeekUsageForWeek:', rows)
+   
+   return rows;
+}
+
+const getTotalMonthsUsage = async (monthsAgo) => {
+   let monthNumber = monthsAgo ? monthsAgo : 1
+   const monthFactor = monthNumber * 30
+   const queryStr = `SELECT ROUND(SUM(usage)) as usage FROM flume WHERE time_id BETWEEN(NOW() - INTERVAL '${30 + monthFactor} DAY') AND(NOW() - INTERVAL '${monthFactor} DAY')`;   
+   const { rows } = await db.query(queryStr)   
+   return rows;
+}
+
+
 // The idea here is to find the latest date in the db, and poll Flume/getUsage
 // until it's current. This is designed to be middleware. It requires a seed
 // date to be in the database or it will fail.
@@ -290,5 +316,8 @@ module.exports = {
    getDevices,
    getDeviceInfo,
    getUsage,
-   persistUsageData
+   persistUsageData,
+   getYearUsage,
+   getTotalWeekUsageForWeek,
+   getTotalMonthsUsage
 };

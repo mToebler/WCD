@@ -105,8 +105,8 @@ const getRachioEvents = async (startTime, endTime, filters = {}) => {
 const persistRachioData = async () => {
    //TODO: wrap in a loop like flume!!!
    // const seedTime = 1609459200000 // 01-01-2021 00:00:00 GMT
-   const { rows } = await db.query('SELECT EXTRACT(EPOCH FROM (SELECT MAX(start_time) FROM rachio)) * 1000 AS seedtime')
-   const seedTime = rows[0].seedtime + 29160000;
+   const { rows } = await db.query('SELECT EXTRACT(EPOCH FROM (SELECT MAX(stop_time) FROM rachio)) * 1000 AS seedtime')
+   const seedTime = rows[0].seedtime + 28860000;  // Skipping ahead 8 hours and  1 min (Rachio serves timezone unadjustec)
    // const seedTime = 1643327770000;
 
    console.log('DEBUG: seedTime rows', seedTime, rows);
@@ -148,7 +148,7 @@ const persistRachioData = async () => {
 
 // testing 
 // setTimeout(getRachioEvents, 1000);
-// setTimeout(persistRachioData, 3000);
+setTimeout(persistRachioData, 3000);
 
 
 module.exports = {

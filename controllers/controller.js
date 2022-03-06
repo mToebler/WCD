@@ -1,4 +1,6 @@
-const db = require('../db')//const { createCustomError } = require('../errors/custom-error')
+const res = require('express/lib/response');
+const db = require('../db'); //const { createCustomError } = require('../errors/custom-error');
+const { getYearUsage } = require('./flume');   
 
 const getUsageAll = async () => {
    const {rows} = await db.query('SELECT zone_id, SUM(usage) FROM zone_usage GROUP BY zone_id ORDER BY zone_id')
@@ -40,13 +42,28 @@ const getMonthlyUsage = async () => {
    return JSON.stringify(rows);
 }
 
+const injectTotalUsage = async () => {
+   const totalUsage = await getYearUsage();
+   const usageData = await getMonthlyUsage();
+   let mergedData = JSON.parse(usageData);
+   
+   for(i = 0; i < mergedData.length; i++) {      
+      console.log("i debug", i, mergedData.length);
+      mergedData[i]["totalUsage"] = totalUsage[i]["usage"];      
+      console.log("injectDebug: during:", i, mergedData[i]);
+   }
+   
+   return JSON.stringify(mergedData);
+}
+
 module.exports = {  
    getUsageAll,
    getAverageUsageByZone,
    getAverageUsageForZone,
    getCurrentAverageUsageForZone,
    getMonthlyUsageForZone,
-   getMonthlyUsage
+   getMonthlyUsage,
+   injectTotalUsage
 }
 
 // query for usage and duration from rachio
