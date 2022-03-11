@@ -311,7 +311,7 @@ const persistUsageData = async () => {
 
 
 // test
-obtainToken();
+// obtainToken();
 // setTimeout(getDevices, 2500)
 // setTimeout(getDeviceInfo.bind(process.env.FLUME_DEVICE_ID), 6000)
 // setTimeout(getUsage, 4000)

@@ -6,6 +6,7 @@ const app = express();
 const routes = require('./routes/routes');
 const flumeRoutes = require('./routes/flume');
 const rachioRoutes = require('./routes/rachio');
+const weatherRoutes = require('./routes/weather');
 // temp inplace for rachioRoutes
 const rachio = require('./controllers/rachio');
 const connectDB = require('./db/index');
@@ -48,6 +49,7 @@ app.use(((req, res, next) => {
 app.use('/api/v1', routes);
 app.use('/api/v1', flumeRoutes);
 app.use('/api/v1', rachioRoutes);
+app.use('/api/v1', weatherRoutes);
 
 // app.use(notFound);
 // app.use(errorHandlerMiddleware);
