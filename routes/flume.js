@@ -13,7 +13,9 @@ const {
    getUsage,
    persistUsageData,
    getTotalWeekUsageForWeek,
-   getTotalMonthsUsage
+   getTotalMonthsUsage,
+   getTotalUsageYTDLastYear,
+   getTotalUsageYTD
 } = require('../controllers/flume');
 
 const queryFlume = async (req, res) => {
@@ -42,8 +44,23 @@ const queryTotalMonthsUsage = async (req, res) => {
    res.send(data)
 }
 
+const queryTotalYTD = async (req, res) => {
+   let data = await getTotalUsageYTD();
+   console.log('getTotalYTD data', data);
+   res.send(data)
+}
+
+const queryTotalYTDLastYear = async (req, res) => {
+   let data = await getTotalUsageYTDLastYear();
+   console.log('getTotalYTDLastYear data', data);
+   res.send(data)
+}
+
+
 router.route('/flume').get(queryFlume);
 router.route('/flume/year').get(queryFlumeYear);
+router.route('/flume/year/ytd').get(queryTotalYTD);
+router.route('/flume/year/prevytd').get(queryTotalYTDLastYear);
 router.route('/flume/week/:week').get(queryUsageWeek);
 router.route('/flume/month/:month').get(queryTotalMonthsUsage);
 

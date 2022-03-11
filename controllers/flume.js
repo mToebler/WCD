@@ -259,6 +259,15 @@ const getTotalMonthsUsage = async (monthsAgo) => {
    return rows;
 }
 
+const getTotalUsageYTD = async () => {
+   const { rows } = await db.query(`SELECT ROUND(SUM(usage)) AS usage FROM flume WHERE time_id BETWEEN(DATE_TRUNC('year', NOW())) AND NOW()`);
+   return rows;
+}
+
+const getTotalUsageYTDLastYear = async () => {
+   const { rows } = await db.query(`SELECT ROUND(SUM(usage)) AS usage FROM flume WHERE time_id BETWEEN(DATE_TRUNC('year', NOW()) - INTERVAL '12 MONTH') AND (NOW() - INTERVAL '12 MONTH')`);
+   return rows;
+}
 
 // The idea here is to find the latest date in the db, and poll Flume/getUsage
 // until it's current. This is designed to be middleware. It requires a seed
@@ -302,9 +311,9 @@ const persistUsageData = async () => {
 
 
 // test
-// obtainToken();
+obtainToken();
 // setTimeout(getDevices, 2500)
-// // setTimeout(getDeviceInfo.bind(process.env.FLUME_DEVICE_ID), 6000)
+// setTimeout(getDeviceInfo.bind(process.env.FLUME_DEVICE_ID), 6000)
 // setTimeout(getUsage, 4000)
 // // setTimeout(renewToken, 10000)
 // setTimeout(persistUsageData, 6000)
@@ -319,5 +328,7 @@ module.exports = {
    persistUsageData,
    getYearUsage,
    getTotalWeekUsageForWeek,
-   getTotalMonthsUsage
+   getTotalMonthsUsage,
+   getTotalUsageYTDLastYear,
+   getTotalUsageYTD
 };
