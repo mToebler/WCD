@@ -11,7 +11,7 @@ const getWeatherInfoVegas = async () => {
    // console.log('ping 3', weatherData);
    // const data = await JSON.parse(weatherData);
    // console.log('ping 4: parsed:', data);
-   return weatherData.data;
+   return weatherData.data["consolidated_weather"];
 }
 
 
