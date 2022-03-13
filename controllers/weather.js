@@ -14,7 +14,15 @@ const getWeatherInfoVegas = async () => {
    return weatherData.data["consolidated_weather"];
 }
 
+const getWaterNews = async () => {
+   const key = process.env.NEWS_API;   
+   const url = `https://newsapi.org/v2/everything?q="water conservation"&from=2022-02-12&sortBy=publishedAt&apiKey=${key}`;
+   const waterNewsData = await axios.get(url); 
+   // console.log('waternews:', waterNewsData.data["articles"])
+   return waterNewsData.data["articles"];
+}
 
 module.exports = {
-   getWeatherInfoVegas
+   getWeatherInfoVegas,
+   getWaterNews
 };

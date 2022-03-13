@@ -5,6 +5,7 @@ const Router = require('express-promise-router')
 const router = Router()
 
 const {
+   getWaterNews,
    getWeatherInfoVegas
 } = require('../controllers/weather');
 
@@ -14,6 +15,12 @@ const queryWeather = async (req, res) => {
    res.send(data);
 }
 
+const queryWaterNews = async (req, res) => {   
+   const data = await getWaterNews();   
+   res.send(data);
+}
+
 router.route('/weather').get(queryWeather);
+router.route('/news').get(queryWaterNews);
 
 module.exports = router;
