@@ -1,6 +1,8 @@
 const res = require('express/lib/response');
+const merge = require('nodemon/lib/utils/merge');
 const db = require('../db'); //const { createCustomError } = require('../errors/custom-error');
-const { getYearUsage } = require('./flume');   
+const { getYearUsage } = require('./flume');  
+const { getRachioZones } = require('./rachio');  
 
 const getUsageAll = async () => {
    const {rows} = await db.query('SELECT zone_id, SUM(usage) FROM zone_usage GROUP BY zone_id ORDER BY zone_id')
@@ -56,6 +58,40 @@ const injectTotalUsage = async () => {
    return JSON.stringify(mergedData);
 }
 
+const injectLatestActivity = async (num) => {   
+   const sortedZones = await getRachioZones();
+   console.log("sortedZones:", sortedZones);   
+   const latestZoneActivity = sortedZones.map((activity, ndx) => {
+      const zoneNum = activity["zoneNumber"];
+      const name = activity["name"];
+      const img = activity["imageUrl"];
+      return { zoneNum, name, img };
+   })
+
+   const latestZA = [...latestZoneActivity];
+   // Now get the start time, usage, and duration
+   const { rows } = await db.query(`select zone_id, start_time, usage, duration from zone_usage order by start_time desc limit ${num}`);
+
+   const mergedZA = combineLatestArrays(rows, latestZA);
+   
+   return mergedZA;
+}  
+
+const combineLatestArrays = (activityArr, referenceArr) => {
+   console.log('activity: ',  activityArr, '\nrefenceArr: ', referenceArr)
+   let combinedArr = activityArr.map((el) => {
+      const id = el["zone_id"]
+      const name = referenceArr[id-1]["name"]
+      const img = referenceArr[id - 1]["img"]
+      const mElement = { ...el, name, img };
+      console.log('mElement:', mElement);
+      return mElement;
+   })
+
+   return combinedArr;
+
+}
+
 module.exports = {  
    getUsageAll,
    getAverageUsageByZone,
@@ -63,7 +99,8 @@ module.exports = {
    getCurrentAverageUsageForZone,
    getMonthlyUsageForZone,
    getMonthlyUsage,
-   injectTotalUsage
+   injectTotalUsage,
+   injectLatestActivity
 }
 
 // query for usage and duration from rachio

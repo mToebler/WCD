@@ -15,15 +15,16 @@ const {
    getTotalWeekUsageForWeek,
    getTotalMonthsUsage,
    getTotalUsageYTDLastYear,
-   getTotalUsageYTD
+   getTotalUsageYTD,
+   getLatestActivity
 } = require('../controllers/flume');
 
 const queryFlume = async (req, res) => {
    // some params
    await obtainToken();
    await getDevices();
-   let data = await getUsage();
    await persistUsageData(); // load db
+   let data = await getUsage();
    res.send(data);
 };
 
@@ -56,6 +57,12 @@ const queryTotalYTDLastYear = async (req, res) => {
    res.send(data)
 }
 
+const refreshZoneUsage = async (req, res) => {
+   const { minutes: count } = req.params;
+   let data = await getLatestActivity(count);
+   console.log('refreshZoneUsage:', data)
+   res.send(data);
+}
 
 router.route('/flume').get(queryFlume);
 router.route('/flume/year').get(queryFlumeYear);
@@ -63,5 +70,6 @@ router.route('/flume/year/ytd').get(queryTotalYTD);
 router.route('/flume/year/prevytd').get(queryTotalYTDLastYear);
 router.route('/flume/week/:week').get(queryUsageWeek);
 router.route('/flume/month/:month').get(queryTotalMonthsUsage);
+router.route('/flume/latest/:minutes').get(refreshZoneUsage);
 
 module.exports = router;

@@ -27,7 +27,7 @@ const getRachioDevice = async (id) => {
       const rachioClient = await new RachioClient(process.env.AUTH_TOKEN);
       // if(DEBUG) console.log('getRachioDevice: client: ', process.env.DEVICE_ID);
       const device = await rachioClient.getDevice(process.env.DEVICE_ID);
-      console.log("getRachioDevice:", device);
+      // console.log("getRachioDevice:", device);
       return device;
    } catch(err) {
       console.log('getRachioDevice Error: ', err);
@@ -39,7 +39,7 @@ const getRachioZones = async () => {
       const device = await getRachioDevice();
       const zones = device.zones;
       const sortedZones = zones.sort((a, b) => a.zoneNumber - b.zoneNumber);
-      console.log('getRachioZones DEBUG: sortedZones:', sortedZones)
+      // console.log('getRachioZones DEBUG: sortedZones:', sortedZones)
       return sortedZones;
    } catch(err) {
       console.error('getRachioZone ERROR: ', err);
@@ -137,7 +137,7 @@ const persistRachioData = async () => {
          try {
             const { rows } = db.query(`INSERT INTO rachio (start_time, stop_time, zone_id) values (to_timestamp($1), to_timestamp($2), $3)`, [start, end, zone]);
 
-            console.log(rows)
+            // console.log(rows)
          } catch(err) {
             console.log('RachioPersist Error', err)
          }

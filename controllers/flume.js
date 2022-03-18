@@ -269,11 +269,25 @@ const getTotalUsageYTDLastYear = async () => {
    return rows;
 }
 
+const updateZoneUsage = async () => {
+   const { rows } = await db.query(`REFRESH MATERIALIZED VIEW  zone_usage`);
+   return rows;
+}
+
+const getLatestActivity = async (count) => {
+   const result = await updateZoneUsage();
+   console.log('getLatestActivity: updateZomeUsage', result)
+   //const { rows } = await db.query(`SELECT time_id, usage FROM flume WHERE usage > 0 ORDER BY time_id DESC LIMIT ${count}`);
+   const { rows } = await db.query(`SELECT time_id, usage FROM flume where time_id < (SELECT time_id FROM flume WHERE usage > 0 ORDER BY time_id DESC LIMIT 1) ORDER BY time_id desc LIMIT ${count}`);
+   return rows;
+}
+
 // The idea here is to find the latest date in the db, and poll Flume/getUsage
 // until it's current. This is designed to be middleware. It requires a seed
 // date to be in the database or it will fail.
 /// TODO: now that it's inserting into the database, systematically load from 2 years ago.
 const persistUsageData = async () => {
+   console.log('PERSIST Date.now is: ', Date.now())
    if(Date.now() > flumeTokens.expiresIn) {
       await renewToken()
    }
@@ -330,5 +344,6 @@ module.exports = {
    getTotalWeekUsageForWeek,
    getTotalMonthsUsage,
    getTotalUsageYTDLastYear,
-   getTotalUsageYTD
+   getTotalUsageYTD,
+   getLatestActivity
 };
