@@ -2,6 +2,7 @@ const axios = require('axios')
 const jwtDecode = require('jwt-decode')
 // PG database
 const db = require('../db')
+const _48HOURS = 172800000;
 
 const getWeatherInfoVegas = async () => {
    const _lasVegas = process.env.WEATHER_LOCATION_CODE;
@@ -18,7 +19,7 @@ const getWaterNews = async () => {
    let waterNewsData
    try {
       // from date needs to be within a 30 day range.
-      const today = new Date();
+      const today = new Date(Date.now() - _48HOURS);
       const from = new Date(today.getFullYear(), today.getMonth(), today.getDate())
       const ye = new Intl.DateTimeFormat('en', { year: 'numeric' }).format(from);
       const mo = new Intl.DateTimeFormat('en', { month: 'numeric' }).format(from);

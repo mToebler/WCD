@@ -3,6 +3,7 @@ const axios = require('axios')
 const jwtDecode = require('jwt-decode')
 const _12HOURS = 43200000;
 const _MINUTE = 60000;
+const _PST2GMT = 25200000; // Flume returns 7 hours ahead, or GMT. This may fixes that.
 
 // PG database
 const db = require('../db')
@@ -158,6 +159,78 @@ const getDeviceInfo = async (deviceId) => {
    }
 };
 
+
+// getRecentUsage - dev
+// params: 
+//    fromWhen: from timestamp 
+//    untilWhen: until timestamp
+const getRecentUsage = async (fromWhen, untilWhen) => {
+   // fromWhen = 1642636250999;
+   const from = fromWhen ? fromWhen - _PST2GMT : Date.now() - (10 * _MINUTE)  - _PST2GMT
+   const until =  untilWhen ? untilWhen - _PST2GMT : Date.now() - _PST2GMT
+   // fromWhen = fromWhen + 60000; // one minute ahead
+   console.log("fromWhen", from)   
+   const deviceId = flumeTokens.deviceId
+   // Check access token
+   if(Date.now() > flumeTokens.expiresIn) {
+      await renewToken()
+   }
+
+   // Capture dates for the query data
+   const date = new Date()
+   // const startOfToday = date.toISOString().substring(0, 10) + ' 12:00:00'
+   // HARDCODED thursday (works in Jan 2022)
+   date.setTime(from)
+   const startDateMS = date.toISOString() // .substring(0, 10) + ' 00:00:00'
+   // if((date.getTime() + _12HOURS) > Date.now())
+   //    date.setTime(Date.now())
+   // else
+   //    date.setTime(until)
+   date.setTime(until)
+   const endDateMS = date.toISOString() // .substring(0, 10) + ' 12:00:00'
+   console.log("Query dates", startDateMS, endDateMS)
+
+   // Generate the JSON data to send
+   const body = {
+      queries: [
+         {
+            request_id: 'usage',
+            bucket: 'MIN',
+            since_datetime: startDateMS,
+            until_datetime: endDateMS,
+            units: 'GALLONS'
+         }
+      ]
+   }
+
+   // Send the request
+   const res = await axios.post(
+      'https://api.flumetech.com/users/' + flumeTokens.userId + '/devices/' + deviceId + '/query',
+      body,
+      {
+         headers: {
+            Authorization: 'Bearer ' + flumeTokens.accessToken
+         }
+      }
+   )
+   if(!res.data) {
+      throw new Error("getUsage: No response")
+   }
+
+   // Parse response
+   return res.data.data[0]
+};
+
+
+
+const getLatestFromFlume = async (count) => {
+
+   // let from = Date.now() - _MINUTE * count;
+   // let until = Date.now()
+   // let data = await getRecentUsage(from, until);
+   let data = await getRecentUsage()
+   return data;
+}
 
 // getUsage - dev
 // params: 
@@ -326,11 +399,11 @@ const persistUsageData = async () => {
 
 // test
 // obtainToken();
-// setTimeout(getDevices, 2500)
-// setTimeout(getDeviceInfo.bind(process.env.FLUME_DEVICE_ID), 6000)
-// setTimeout(getUsage, 4000)
-// // setTimeout(renewToken, 10000)
-// setTimeout(persistUsageData, 6000)
+//setTimeout(getDevices, 2500)
+//setTimeout(getDeviceInfo.bind(process.env.FLUME_DEVICE_ID), 4000)
+// setTimeout(getUsage, 6000)
+//setTimeout(renewToken, 5000)
+//setTimeout(persistUsageData, 6000)
 
 
 module.exports = {
@@ -345,5 +418,6 @@ module.exports = {
    getTotalMonthsUsage,
    getTotalUsageYTDLastYear,
    getTotalUsageYTD,
-   getLatestActivity
+   getLatestActivity,
+   getLatestFromFlume
 };
