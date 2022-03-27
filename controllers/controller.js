@@ -2,7 +2,8 @@ const res = require('express/lib/response');
 const merge = require('nodemon/lib/utils/merge');
 const db = require('../db'); //const { createCustomError } = require('../errors/custom-error');
 const { getYearUsage } = require('./flume');  
-const { getRachioZones } = require('./rachio');  
+const { getRachioZones, persistRachioData } = require('./rachio');  
+
 
 const getUsageAll = async () => {
    const {rows} = await db.query('SELECT zone_id, SUM(usage) FROM zone_usage GROUP BY zone_id ORDER BY zone_id')
@@ -45,6 +46,8 @@ const getMonthlyUsage = async () => {
 }
 
 const injectTotalUsage = async () => {
+   // first get latest:
+   await persistRachioData();
    const totalUsage = await getYearUsage();
    const usageData = await getMonthlyUsage();
    let mergedData = JSON.parse(usageData);

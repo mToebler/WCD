@@ -155,7 +155,8 @@ module.exports = {
    getRachioEvents,
    getRachioDevice,
    getRachioZone,
-   getRachioZones
+   getRachioZones,
+   persistRachioData
 }
 // export class RachioService {
 

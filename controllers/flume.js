@@ -228,7 +228,9 @@ const getLatestFromFlume = async (count) => {
    // let from = Date.now() - _MINUTE * count;
    // let until = Date.now()
    // let data = await getRecentUsage(from, until);
-   let data = await getRecentUsage()
+   let result = await updateZoneUsage();
+   console.log('GLFFlume: updateZoneUsage: ', result);   
+   let data = await getRecentUsage();
    return data;
 }
 
@@ -343,13 +345,13 @@ const getTotalUsageYTDLastYear = async () => {
 }
 
 const updateZoneUsage = async () => {
-   const { rows } = await db.query(`REFRESH MATERIALIZED VIEW  zone_usage`);
+   const { rows } = await db.query(`REFRESH MATERIALIZED VIEW zone_usage`);
    return rows;
 }
 
 const getLatestActivity = async (count) => {
    const result = await updateZoneUsage();
-   console.log('getLatestActivity: updateZomeUsage', result)
+   console.log('getLatestActivity: updateZoneUsage', result)
    //const { rows } = await db.query(`SELECT time_id, usage FROM flume WHERE usage > 0 ORDER BY time_id DESC LIMIT ${count}`);
    const { rows } = await db.query(`SELECT time_id, usage FROM flume where time_id < (SELECT time_id FROM flume WHERE usage > 0 ORDER BY time_id DESC LIMIT 1) ORDER BY time_id desc LIMIT ${count}`);
    return rows;
