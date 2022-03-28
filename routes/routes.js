@@ -5,6 +5,7 @@ const db = require('../db')
 const router = Router()
 const { getUsageAll, getAverageUsageForZone, getAverageUsageByZone, getCurrentAverageUsageForZone, getMonthlyUsageForZone, getMonthlyUsage, injectTotalUsage, injectLatestActivity } = require('../controllers/controller')
 const res = require('express/lib/response')
+const verifyToken = require('../middleware/auth')
 // const router = express.Router()
 
 const getFlume = (req, res) => {
