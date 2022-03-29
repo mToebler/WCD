@@ -12,7 +12,7 @@ const getUsageAll = async () => {
 }
 
 const getAverageUsageByZone = async () => {
-   const { rows } = await db.query('SELECT usage/(EXTRACT(EPOCH FROM duration)/60) AS gpm, usage, duration, zone_id FROM (SELECT SUM(duration) AS duration, SUM(usage) AS usage, zone_id FROM zone_usage GROUP BY zone_id) AS dual');
+   const { rows } = await db.query('SELECT usage/(EXTRACT(EPOCH FROM duration)/60) AS gpm, usage, duration, zone_id FROM (SELECT SUM(duration) AS duration, SUM(usage) AS usage, zone_id FROM zone_usage GROUP BY zone_id) AS dual ORDER BY zone_id');
    console.log('getAverageUsageByZone', rows)
    return JSON.stringify(rows);
 }
@@ -29,6 +29,41 @@ const getCurrentAverageUsageForZone = async (zoneId) => {
    console.log('getCurrentAverageUsageForZone', rows)
 
    return JSON.stringify(rows);
+}
+
+const getCurrentAverageUsageByZone = async () => {
+   const { rows } = await db.query(`SELECT usage/(EXTRACT(EPOCH FROM duration)/60) AS gpm, usage, duration, zone_id FROM (SELECT SUM(duration) AS duration, SUM(usage) AS usage, zone_id FROM zone_usage WHERE start_time > (NOW() - INTERVAL '30 days') GROUP BY zone_id) AS dual ORDER BY zone_id`);
+
+   console.log('getCurrentAverageUsageByZone', rows);
+
+   return JSON.stringify(rows);
+}
+
+const compareCurrentAndTotalAverages = async () => {
+   // get recentGpm
+   const recentGpm = await getCurrentAverageUsageByZone();
+   const recentGpmJs = JSON.parse(recentGpm)
+   // get toalGpm
+   const totalGpm = await getAverageUsageByZone();
+   const totalGpmJs = JSON.parse(totalGpm);
+   // not all zones may be present in recent. Use total as base
+   const joinedGpm = totalGpmJs.map((e, idx) => {
+      let recent = 0;      
+      recentGpmJs.forEach(
+         (rE) => {
+            if((parseInt(rE["zone_id"])) == parseInt(e["zone_id"])) {
+               recent = rE["gpm"];
+               console.log('recent hit:', recent);               
+            } else {
+               console.log('recent NO hit:', rE["gpm"]);
+            }
+         }
+      )
+      return { zone: e["zone_id"], totalGpm: e["gpm"], recentGpm: recent }
+   })
+   console.log('comapreCurAndTot joinGpm:', joinedGpm)
+
+   return JSON.stringify(joinedGpm);
 }
 
 const getMonthlyUsageForZone = async (zoneId) => {
@@ -95,6 +130,14 @@ const combineLatestArrays = (activityArr, referenceArr) => {
 
 }
 
+const checkAuth = () => {
+   // simply return true. If it reaches client, authed.
+   return true;
+}
+
+// testing
+// setTimeout(compareCurrentAndTotalAverages, 2000);
+
 module.exports = {  
    getUsageAll,
    getAverageUsageByZone,
@@ -103,8 +146,7 @@ module.exports = {
    getMonthlyUsageForZone,
    getMonthlyUsage,
    injectTotalUsage,
-   injectLatestActivity
+   injectLatestActivity,
+   checkAuth
 }
 
-// query for usage and duration from rachio
-// select rachio.start_time, rachio.stop_time, rachio.zone_id, sum(flume.usage) as usage, age(rachio.stop_time, rachio.start_time) as duration  from rachio, flume where flume.time_id between rachio.start_time and rachio.stop_time group by rachio.zone_id, rachio.start_time, rachio.stop_time

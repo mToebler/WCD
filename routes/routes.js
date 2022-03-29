@@ -3,7 +3,7 @@ const express = require('express')
 const Router = require('express-promise-router')
 const db = require('../db')
 const router = Router()
-const { getUsageAll, getAverageUsageForZone, getAverageUsageByZone, getCurrentAverageUsageForZone, getMonthlyUsageForZone, getMonthlyUsage, injectTotalUsage, injectLatestActivity } = require('../controllers/controller')
+const { getUsageAll, getAverageUsageForZone, getAverageUsageByZone, getCurrentAverageUsageForZone, getMonthlyUsageForZone, getMonthlyUsage, injectTotalUsage, injectLatestActivity, checkAuth } = require('../controllers/controller')
 const res = require('express/lib/response')
 const verifyToken = require('../middleware/auth')
 // const router = express.Router()
@@ -103,10 +103,16 @@ const getLatestRachioActivity = async (req, res) => {
    res.send(data);
 }
 
+const isAuthed = async (req, res) => { 
+   let authed = await checkAuth();
+   return authed;
+}
+
 // router.route('/flume').get(getFlume)
 // router.route('/rachio').get(getRachio)
 router.route('/zone/:id').get(getZone)
 router.route('/user/:id').get(getUser)
+router.route('/user/checkauth').get(isAuthed)
 router.route('/usage/all').get(getUsage)
 router.route('/usage/gpm/:id').get(getGpmForZone)
 router.route('/usage/gpm').get(getGpmByZone)
