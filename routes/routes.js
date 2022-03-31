@@ -103,19 +103,19 @@ const getLatestRachioActivity = async (req, res) => {
    res.send(data);
 }
 
-const isAuthed = async (req, res) => { 
-   let authed = await checkAuth();
+const isAuthed = (req, res) => { 
+   let authed = checkAuth();
    return authed;
 }
 
 // router.route('/flume').get(getFlume)
 // router.route('/rachio').get(getRachio)
 router.route('/zone/:id').get(getZone)
+router.route('/checkauth').get(isAuthed)
 router.route('/user/:id').get(getUser)
-router.route('/user/checkauth').get(isAuthed)
 router.route('/usage/all').get(getUsage)
 router.route('/usage/gpm/:id').get(getGpmForZone)
-router.route('/usage/gpm').get(getGpmByZone)
+router.route('/usage/gpm').get(getGpmByZone) 
 router.route('/usage/gpm/:id/current').get(getCurrentGpmForZone)
 router.route('/usage/monthly/:id').get(getMonthlyForZone)
 router.route('/usage/monthly').get(getMonthlyForAll)
