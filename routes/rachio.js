@@ -8,7 +8,9 @@ const {
    getRachioEvents,
    getRachioDevice,
    getRachioZone,
-   getRachioZones
+   getRachioZones,
+   startRachio,
+   startRachioOneMinute
 } = require('../controllers/rachio');
 
 const queryRachio = async (req, res) => {
@@ -34,9 +36,24 @@ const queryZones = async (req, res) => {
    // res.send(data);
 }
 
+const waterZone = async (req, res) => {
+   const { id: zoneId, secs: seconds } = req.params;
+   console.log('waterZone: id', zoneId, 'seconds', seconds)
+   let isWatering = await startRachio(zoneId, parseInt(seconds));
+   res.json(isWatering);
+}
+
+// const startRachioOneMinute = async (req, res) => {
+//    const { id: zoneId } = req.params;
+//    console.log('waterZone: id', zoneId, 'seconds', seconds)
+//    let isWatering = await startRachio(zoneId, seconds);
+//    return isWatering;
+// }
+
 router.route('/rachio').get(queryRachio);
 router.route('/rachio/zone').get(queryZones);
 router.route('/rachio/zone/:id').get(queryZone);
 router.route('/rachio/device').get(queryDevice);
+router.route('/rachio/startzone/:id/duration/:secs').get(waterZone);
 
 module.exports = router;
